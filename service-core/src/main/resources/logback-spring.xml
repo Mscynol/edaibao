@@ -45,14 +45,46 @@
             <charset>${ENCODING}</charset>
         </encoder>
     </appender>
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--  要区别于其他的appender中的文件名字  -->
+        <file>${log.path}/log-rolling.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+        <!-- 设置滚动日志记录的滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志归档路径以及格式 -->
+            <fileNamePattern>${log.path}/info/log-rolling-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--归档日志文件保留的最大数量-->
+            <maxHistory>15</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1KB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
     <!-- 日志记录器
         <logger>可以是<configuration>的子节点，用来设置某一个包或具体某一个类的日志打印级别、指定<appender>
         name：用来指定受此logger约束的某一个包或者具体的某一个类
         level：用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF。默认继承上级的级别
         <logger>可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个logger
      -->
-    <logger name="com.alexis" level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </logger>
+<!--    <logger name="com.alexis" level="INFO">-->
+<!--        <appender-ref ref="CONSOLE" />-->
+<!--        <appender-ref ref="FILE" />-->
+<!--    </logger>-->
+    <!-- 开发环境和测试环境 -->
+    <springProfile name="dev,test">
+        <logger name="com.alexis" level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+    </springProfile>
+
+    <!-- 生产环境 -->
+    <springProfile name="prod">
+        <logger name="com.alexis" level="ERROR">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ROLLING_FILE" />
+        </logger>
+    </springProfile>
 </configuration>
