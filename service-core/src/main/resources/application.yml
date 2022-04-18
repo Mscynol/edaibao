@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8110
 spring:
   profiles:
     active: dev # 环境配置
@@ -14,4 +14,4 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:com/alexis/edaibao/core/mpper/xml/*.xml
+  mapper-locations: classpath:com/alexis/edaibao/core/mapper/xml/*.xml
